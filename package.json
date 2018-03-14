@@ -1,0 +1,39 @@
+{
+  "name": "knexshelf",
+  "version": "0.0.1",
+  "author": "Gene Diaz <genediazjr@gmail.com> (http://genediazjr.com)",
+  "description": "Just another node library",
+  "keywords": [
+    "hapi",
+    "knex",
+    "models",
+    "bookshelf"
+  ],
+  "license": "MIT",
+  "repository": "git://github.com/genediazjr/knexshelf",
+  "bugs": "https://github.com/genediazjr/knexshelf/issues",
+  "main": "lib/index.js",
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "scripts": {
+    "test": "lab -c -v -L -a code -l",
+    "test-cover": "lab -c -v -L -a code -r html -o ./coverage.html -L && open ./coverage.html"
+  },
+  "peerDependencies": {
+    "hapi": ">=17.x",
+    "joi": ">=13.x"
+  },
+  "dependencies": {
+    "bookshelf": "0.12.x",
+    "knex": "0.14.x",
+    "joi": "13.1.x"
+  },
+  "devDependencies": {
+    "coveralls": "3.0.x",
+    "hapi": "17.2.x",
+    "code": "5.2.x",
+    "lab": "15.4.x",
+    "pg": "7.4.x"
+  }
+}

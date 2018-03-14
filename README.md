@@ -6,6 +6,7 @@
 [![NPM Downloads](https://img.shields.io/npm/dt/knexshelf.svg?maxAge=2592000)](https://www.npmjs.com/knexshelf)<br>
 [![Dependency Status](https://david-dm.org/genediazjr/knexshelf.svg)](https://david-dm.org/genediazjr/knexshelf)
 [![Known Vulnerabilities](https://snyk.io/test/github/genediazjr/knexshelf/badge.svg)](https://snyk.io/test/github/genediazjr/knexshelf)
+[![NSP Status](https://nodesecurity.io/orgs/genediazjr/projects/e5bbc47d-90b2-4951-87f9-7419d47f2abf/badge)](https://nodesecurity.io/orgs/genediazjr/projects/e5bbc47d-90b2-4951-87f9-7419d47f2abf)
 
 
 ### Contributing
