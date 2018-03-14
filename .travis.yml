@@ -1,0 +1,23 @@
+language: node_js
+node_js:
+  - "8"
+
+sudo: required
+
+services:
+  - postgresql
+
+env:
+  - CC=clang CXX=clang++ npm_config_clang=1
+
+addons:
+  postgresql: "9.5"
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
+
+after_script: NODE_ENV=test lab -r lcov | ./node_modules/.bin/coveralls
+
+before_install: if [[ `npm -v` != 5* ]]; then npm i -g npm@5; fi
