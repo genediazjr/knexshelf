@@ -15,7 +15,7 @@ const it = lab.it;
 
 const connString = 'postgres://postgres:postgres@localhost:5432/postgres';
 
-describe('oakbarrel', () => {
+describe('lib', () => {
 
     it('exports.initBookshelf', () => {
 
@@ -268,14 +268,14 @@ describe('oakbarrel', () => {
         }).to.throw(Error, 'Bookshelf instance is invalid');
     });
 
-    it('exports.buildBarrel', async () => {
+    it('exports.buildShelf', async () => {
 
         const Modelx = Object.assign({}, Schemas[4], { protoProps: { tableName: 'formatter_tablex' } });
         const Model0 = Object.assign({}, Schemas[0], { name: 'book2' });
         const Models2 = [Model0];
-        const barrel = await Lib.buildBarrel(connString, Schemas, { methods: [Methods] });
-        const barrel2 = await Lib.buildBarrel({ foobar: connString }, { foobar: Schemas });
-        const barrel3 = await Lib.buildBarrel({
+        const shelf = await Lib.buildShelf(connString, Schemas, { methods: [Methods] });
+        const shelf2 = await Lib.buildShelf({ foobar: connString }, { foobar: Schemas });
+        const shelf3 = await Lib.buildShelf({
             foobar: connString,
             barfoo: connString
         }, {
@@ -283,7 +283,7 @@ describe('oakbarrel', () => {
             barfoo: Models2
         });
 
-        const barrel4 = await Lib.buildBarrel(connString, [Modelx], {
+        const shelf4 = await Lib.buildShelf(connString, [Modelx], {
             schemas: {
                 formatterTable: {
                     columns: (table) => {
@@ -294,53 +294,53 @@ describe('oakbarrel', () => {
             }
         });
 
-        expect(await barrel.methods.testing()).to.equal('methodtestrowling');
+        expect(await shelf.methods.testing()).to.equal('methodtestrowling');
 
-        expect(barrel.bookshelves.default.knex).to.exist();
-        expect(barrel.knexes.default.raw).to.exist();
-        expect(barrel.models.soloTable.do).to.exist();
-        expect(barrel.models.compositeTable.do).to.exist();
-        expect(barrel.models.author.do).to.exist();
-        expect(barrel.models.book.do).to.exist();
+        expect(shelf.bookshelves.default.knex).to.exist();
+        expect(shelf.knexes.default.raw).to.exist();
+        expect(shelf.models.soloTable.do).to.exist();
+        expect(shelf.models.compositeTable.do).to.exist();
+        expect(shelf.models.author.do).to.exist();
+        expect(shelf.models.book.do).to.exist();
 
-        expect(await barrel.models.book.do.browse()).to.equal([]);
+        expect(await shelf.models.book.do.browse()).to.equal([]);
 
-        expect(barrel2.bookshelves.foobar.knex).to.exist();
-        expect(barrel2.knexes.foobar.raw).to.exist();
-        expect(barrel2.models.soloTable.do).to.exist();
-        expect(barrel2.models.compositeTable.do).to.exist();
-        expect(barrel2.models.author.do).to.exist();
-        expect(barrel2.models.book.do).to.exist();
+        expect(shelf2.bookshelves.foobar.knex).to.exist();
+        expect(shelf2.knexes.foobar.raw).to.exist();
+        expect(shelf2.models.soloTable.do).to.exist();
+        expect(shelf2.models.compositeTable.do).to.exist();
+        expect(shelf2.models.author.do).to.exist();
+        expect(shelf2.models.book.do).to.exist();
 
-        expect(await barrel2.models.book.do.browse()).to.equal([]);
+        expect(await shelf2.models.book.do.browse()).to.equal([]);
 
-        expect(barrel3.bookshelves.foobar.knex).to.exist();
-        expect(barrel3.knexes.foobar.raw).to.exist();
-        expect(barrel3.models.soloTable.do).to.exist();
-        expect(barrel3.models.compositeTable.do).to.exist();
-        expect(barrel3.models.author.do).to.exist();
-        expect(barrel3.models.book.do).to.exist();
-        expect(barrel3.bookshelves.barfoo.knex).to.exist();
-        expect(barrel3.knexes.barfoo.raw).to.exist();
-        expect(barrel3.models.soloTable.do).to.exist();
-        expect(barrel3.models.compositeTable.do).to.exist();
-        expect(barrel3.models.author.do).to.exist();
-        expect(barrel3.models.book.do).to.exist();
+        expect(shelf3.bookshelves.foobar.knex).to.exist();
+        expect(shelf3.knexes.foobar.raw).to.exist();
+        expect(shelf3.models.soloTable.do).to.exist();
+        expect(shelf3.models.compositeTable.do).to.exist();
+        expect(shelf3.models.author.do).to.exist();
+        expect(shelf3.models.book.do).to.exist();
+        expect(shelf3.bookshelves.barfoo.knex).to.exist();
+        expect(shelf3.knexes.barfoo.raw).to.exist();
+        expect(shelf3.models.soloTable.do).to.exist();
+        expect(shelf3.models.compositeTable.do).to.exist();
+        expect(shelf3.models.author.do).to.exist();
+        expect(shelf3.models.book.do).to.exist();
 
-        expect(await barrel3.models.book2.do.browse()).to.equal([]);
+        expect(await shelf3.models.book2.do.browse()).to.equal([]);
 
-        const res4 = await barrel4.models.formatterTable.do.create({ somecolumn: 'test' });
+        const res4 = await shelf.models.formatterTable.do.create({ somecolumn: 'test' });
 
         expect(res4.somecolumn).to.equal('test');
 
-        await barrel.bookshelves.default.knex.schema.dropTableIfExists(Modelx.protoProps.tableName);
-        await barrel.bookshelves.default.knex.schema.dropTableIfExists(Schemas[4].protoProps.tableName);
-        await barrel.bookshelves.default.knex.schema.dropTableIfExists(Schemas[3].protoProps.tableName);
-        await barrel.bookshelves.default.knex.schema.dropTableIfExists(Schemas[2].protoProps.tableName);
-        await barrel.bookshelves.default.knex.schema.dropTableIfExists(Schemas[1].protoProps.tableName);
-        await barrel.bookshelves.default.knex.schema.dropTableIfExists(Schemas[0].protoProps.tableName);
+        await shelf.bookshelves.default.knex.schema.dropTableIfExists(Modelx.protoProps.tableName);
+        await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[4].protoProps.tableName);
+        await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[3].protoProps.tableName);
+        await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[2].protoProps.tableName);
+        await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[1].protoProps.tableName);
+        await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[0].protoProps.tableName);
 
-        await expect(Lib.buildBarrel({
+        await expect(Lib.buildShelf({
             foobar: connString
         }, {
             foobarx: Schemas
@@ -437,20 +437,20 @@ describe('oakbarrel', () => {
         await server.knexes.default.schema.dropTableIfExists(Schemas[0].protoProps.tableName);
     });
 
-    it('exports.generateBarrel', async () => {
+    it('exports.generateShelf', async () => {
 
-        const barrel = await Testlib.init(connString);
+        const shelf = await Testlib.init(connString);
 
-        expect(barrel.bookshelves.default.knex).to.exist();
-        expect(barrel.knexes.default.raw).to.exist();
-        expect(barrel.models.soloTable.do).to.exist();
-        expect(barrel.models.compositeTable.do).to.exist();
-        expect(barrel.models.author.do).to.exist();
-        expect(barrel.models.book.do).to.exist();
+        expect(shelf.bookshelves.default.knex).to.exist();
+        expect(shelf.knexes.default.raw).to.exist();
+        expect(shelf.models.soloTable.do).to.exist();
+        expect(shelf.models.compositeTable.do).to.exist();
+        expect(shelf.models.author.do).to.exist();
+        expect(shelf.models.book.do).to.exist();
 
         let res;
 
-        expect(await barrel.models.book.do.browse()).to.equal([]);
+        expect(await shelf.models.book.do.browse()).to.equal([]);
 
         const server = Hapi.server();
 
@@ -489,9 +489,9 @@ describe('oakbarrel', () => {
 
         expect(res[0].label).to.equal('farboo');
 
-        await barrel.bookshelves.default.knex.schema.dropTableIfExists(Schemas[3].protoProps.tableName);
-        await barrel.bookshelves.default.knex.schema.dropTableIfExists(Schemas[2].protoProps.tableName);
-        await barrel.bookshelves.default.knex.schema.dropTableIfExists(Schemas[1].protoProps.tableName);
-        await barrel.bookshelves.default.knex.schema.dropTableIfExists(Schemas[0].protoProps.tableName);
+        await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[3].protoProps.tableName);
+        await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[2].protoProps.tableName);
+        await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[1].protoProps.tableName);
+        await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[0].protoProps.tableName);
     });
 });
