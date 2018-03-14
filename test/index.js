@@ -329,7 +329,7 @@ describe('lib', () => {
 
         expect(await shelf3.models.book2.do.browse()).to.equal([]);
 
-        const res4 = await shelf.models.formatterTable.do.create({ somecolumn: 'test' });
+        const res4 = await shelf4.models.formatterTable.do.create({ somecolumn: 'test' });
 
         expect(res4.somecolumn).to.equal('test');
 
