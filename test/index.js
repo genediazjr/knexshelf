@@ -253,6 +253,7 @@ describe('lib', () => {
         await bookshelf.knex.schema.dropTableIfExists(Model3.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model1.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model5.protoProps.tableName);
+
         if (await bookshelf.knex.schema.hasTable(Model5.protoProps.tableName)) {
             await bookshelf.knex.schema.dropTableIfExists(Model5.protoProps.tableName);
         }
@@ -273,6 +274,7 @@ describe('lib', () => {
         const Modelx = Object.assign({}, Schemas[4], { protoProps: { tableName: 'formatter_tablex' } });
         const Model0 = Object.assign({}, Schemas[0], { name: 'book2' });
         const Models2 = [Model0];
+        const shelf0 = await Lib.buildShelf(connString);
         const shelf = await Lib.buildShelf(connString, Schemas, { methods: [Methods] });
         const shelf2 = await Lib.buildShelf({ foobar: connString }, { foobar: Schemas });
         const shelf3 = await Lib.buildShelf({
@@ -293,6 +295,9 @@ describe('lib', () => {
                 }
             }
         });
+
+        expect(shelf0.bookshelves.default.knex).to.exist();
+        expect(shelf0.knexes.default.raw).to.exist();
 
         expect(await shelf.methods.testing()).to.equal('methodtestrowling');
 
@@ -354,6 +359,12 @@ describe('lib', () => {
         const serverz = Hapi.server();
         const serverv = Hapi.server();
         const servery = Hapi.server();
+        const serveru = Hapi.server();
+
+        await serveru.register({
+            plugin: Lib.generateHapiPlugin('../package.json'),
+            options: { conns: connString }
+        });
 
         await server.register({
             plugin: Lib.generateHapiPlugin('../package.json', Schemas),
@@ -404,6 +415,9 @@ describe('lib', () => {
                 }
             })
         });
+
+        expect(serveru.bookshelves.default.knex).to.exist();
+        expect(serveru.knexes.default.raw).to.exist();
 
         const models = server.methods.models;
         const modelsx = serverx.methods.models;
