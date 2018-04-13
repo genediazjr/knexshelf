@@ -15,6 +15,14 @@ const it = lab.it;
 
 const connString = 'postgres://postgres:postgres@localhost:5432/postgres';
 
+const timeout = (ms) => {
+
+    return new Promise((res) => {
+
+        return setTimeout(res, ms);
+    });
+};
+
 describe('lib', () => {
 
     it('exports.initBookshelf', () => {
@@ -125,21 +133,27 @@ describe('lib', () => {
         const Model3 = Object.assign({}, Schemas[2]);
         const Model4 = Object.assign({}, Schemas[3]);
         const Model5 = Object.assign({}, Schemas[4]);
+        const Model6 = Object.assign({}, Schemas[5]);
 
         await bookshelf.knex.schema.dropTableIfExists(Model4.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model3.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model1.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model5.protoProps.tableName);
+        await bookshelf.knex.schema.dropTableIfExists(Model6.protoProps.tableName);
 
         await Lib.createTable(Model3, bookshelf);
         await Lib.createTable(Model4, bookshelf);
         await Lib.createTable(Model1, bookshelf);
         await Lib.createTable(Model5, bookshelf);
+        await Lib.createTable(Model6, bookshelf);
 
         const soloTable = Lib.loadModel(Model1, bookshelf);
         const bookModel = Lib.loadModel(Model4, bookshelf);
         const authorModel = Lib.loadModel(Model3, bookshelf);
+        const updatedModel = Lib.loadModel(Model6, bookshelf);
         const formatterModel = Lib.loadModel(Model5, bookshelf);
+
+        await updatedModel.do.create({ label: 'updateme' });
 
         expect(authorModel.do.testing()).to.equal('author');
 
@@ -247,16 +261,25 @@ describe('lib', () => {
         })).to.reject(Error, 'No Rows Deleted');
 
         await expect(soloTable.do.create()).to.reject(Error,
-            'insert into "solo_table" ("created_at") values ($1) returning "id" - null value in column "label" violates not-null constraint');
+            'insert into "solo_table" default values returning "id" - null value in column "label" violates not-null constraint');
+
+        await timeout(1000);
+
+        await updatedModel.do.update({ id: 1 }, { label: 'updated' });
+
+        res = await updatedModel.do.browse();
+
+        const delay = res[0].updated_at.getTime() - res[0].created_at.getTime();
+
+        expect(delay).to.be.above(1100);
+        expect(delay).to.be.below(1150);
+
 
         await bookshelf.knex.schema.dropTableIfExists(Model4.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model3.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model1.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model5.protoProps.tableName);
-
-        if (await bookshelf.knex.schema.hasTable(Model5.protoProps.tableName)) {
-            await bookshelf.knex.schema.dropTableIfExists(Model5.protoProps.tableName);
-        }
+        await bookshelf.knex.schema.dropTableIfExists(Model6.protoProps.tableName);
 
         expect(() => {
 

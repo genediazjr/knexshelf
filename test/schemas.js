@@ -4,7 +4,8 @@ module.exports = [
     {
         name: 'soloTable',
         protoProps: {
-            tableName: 'solo_table'
+            tableName: 'solo_table',
+            withUpdatedAt: true
         },
         columns: (table) => {
 
@@ -156,6 +157,17 @@ module.exports = [
 
                 return { params, schema };
             }
+        }
+    },
+    {
+        name: 'timestampTable',
+        protoProps: {
+            tableName: 'timestamp_table',
+            hasTimestamps: true
+        },
+        columns: (table) => {
+
+            table.string('label').notNullable();
         }
     }
 ];
