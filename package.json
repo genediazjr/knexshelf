@@ -25,13 +25,13 @@
     "joi": ">=13.x"
   },
   "dependencies": {
-    "bookshelf": "0.12.x",
+    "bookshelf": "0.13.x",
     "knex": "0.14.x",
     "joi": "13.1.x"
   },
   "devDependencies": {
     "coveralls": "3.0.x",
-    "hapi": "17.2.x",
+    "hapi": "17.3.x",
     "code": "5.2.x",
     "lab": "15.4.x",
     "pg": "7.4.x"
