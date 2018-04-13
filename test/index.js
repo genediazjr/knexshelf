@@ -271,8 +271,8 @@ describe('lib', () => {
 
         const delay = res[0].updated_at.getTime() - res[0].created_at.getTime();
 
-        expect(delay).to.be.above(1100);
-        expect(delay).to.be.below(1150);
+        expect(delay).to.be.above(1000);
+        expect(delay).to.be.below(2000);
 
 
         await bookshelf.knex.schema.dropTableIfExists(Model4.protoProps.tableName);
