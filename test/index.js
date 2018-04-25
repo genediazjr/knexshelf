@@ -230,6 +230,12 @@ describe('lib', () => {
 
         expect(res[0].title).to.equal('the hobbit');
 
+        const qb = bookModel.model.query();
+
+        res = await qb.where({id: 1}).select();
+
+        expect(res[0].title).to.equal('the hobbit');
+
         res = await bookModel.do.obtain({ id: 1 });
 
         expect(res.author.name).to.equal('tolkien');
