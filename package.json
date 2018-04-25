@@ -27,7 +27,7 @@
   "dependencies": {
     "bookshelf": "0.13.x",
     "knex": "0.14.x",
-    "joi": "13.1.x"
+    "joi": "13.2.x"
   },
   "devDependencies": {
     "coveralls": "3.0.x",

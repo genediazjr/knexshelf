@@ -419,7 +419,7 @@
       "requires": {
         "boom": "7.2.0",
         "hoek": "5.0.3",
-        "joi": "13.1.2"
+        "joi": "13.2.0"
       },
       "dependencies": {
         "boom": {
@@ -577,7 +577,7 @@
         "boom": "7.2.0",
         "bounce": "1.2.0",
         "hoek": "5.0.3",
-        "joi": "13.1.2"
+        "joi": "13.2.0"
       },
       "dependencies": {
         "boom": {
@@ -1538,7 +1538,7 @@
         "catbox-memory": "3.1.2",
         "heavy": "6.1.0",
         "hoek": "5.0.3",
-        "joi": "13.1.2",
+        "joi": "13.2.0",
         "mimos": "4.0.0",
         "podium": "3.1.2",
         "shot": "4.0.5",
@@ -1670,7 +1670,7 @@
       "requires": {
         "boom": "7.2.0",
         "hoek": "5.0.3",
-        "joi": "13.1.2"
+        "joi": "13.2.0"
       },
       "dependencies": {
         "boom": {
@@ -2037,9 +2037,9 @@
       "dev": true
     },
     "joi": {
-      "version": "13.1.2",
-      "resolved": "https://registry.npmjs.org/joi/-/joi-13.1.2.tgz",
-      "integrity": "sha512-bZZSQYW5lPXenOfENvgCBPb9+H6E6MeNWcMtikI04fKphj5tvFL9TOb+H2apJzbCrRw/jebjTH8z6IHLpBytGg==",
+      "version": "13.2.0",
+      "resolved": "https://registry.npmjs.org/joi/-/joi-13.2.0.tgz",
+      "integrity": "sha512-VUzQwyCrmT2lIpxBCYq26dcK9veCQzDh84gQnCtaxCa8ePohX8JZVVsIb+E66kCUUcIvzeIpifa6eZuzqTZ3NA==",
       "requires": {
         "hoek": "5.0.3",
         "isemail": "3.1.2",
@@ -2766,7 +2766,7 @@
       "dev": true,
       "requires": {
         "hoek": "5.0.3",
-        "joi": "13.1.2"
+        "joi": "13.2.0"
       }
     },
     "posix-character-classes": {
@@ -3087,7 +3087,7 @@
       "dev": true,
       "requires": {
         "hoek": "5.0.3",
-        "joi": "13.1.2"
+        "joi": "13.2.0"
       }
     },
     "signal-exit": {
@@ -3316,7 +3316,7 @@
         "cryptiles": "4.1.1",
         "hoek": "5.0.3",
         "iron": "5.0.4",
-        "joi": "13.1.2"
+        "joi": "13.2.0"
       },
       "dependencies": {
         "boom": {
