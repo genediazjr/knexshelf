@@ -164,9 +164,33 @@ describe('lib', () => {
 
         let res;
 
-        expect(await soloTable.do.custom((query) => {
+        expect(await soloTable.do.browse({
+            perPage: 2,
+            page: 2
+        })).to.equal([]);
 
-            query.orderByRaw('id DESC');
+        expect(await soloTable.do.browse({
+            perPage: 2,
+            page: 2,
+            custom: (query) => {
+
+                query.orderByRaw('id DESC');
+            }
+        })).to.equal([]);
+
+        expect(await soloTable.do.browse({
+            perPage: 2,
+            custom: (query) => {
+
+                query.orderByRaw('id DESC');
+            }
+        })).to.equal([]);
+
+        expect(await soloTable.do.browse({
+            custom: (query) => {
+
+                query.orderByRaw('id DESC');
+            }
         })).to.equal([]);
 
         expect(await soloTable.do.browse()).to.equal([]);
