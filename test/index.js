@@ -158,6 +158,7 @@ describe('lib', () => {
         expect(authorModel.do.testing()).to.equal('author');
 
         Model0.name = 'soloTablex';
+        Model0.protoProps.tableName = 'solo_table_x';
         Model0.bookshelf = bookshelf;
 
         Lib.loadModel(Model0);
