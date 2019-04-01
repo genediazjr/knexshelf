@@ -43,7 +43,6 @@
     "eol-last": 2,
     "use-isnan": 2,
     "wrap-iife": 2,
-    "camelcase": 2,
     "complexity": 2,
     "guard-for-in": 2,
     "valid-typeof": 2,
