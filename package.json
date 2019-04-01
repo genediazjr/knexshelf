@@ -21,19 +21,19 @@
     "test-cover": "lab -c -v -L -a code -r html -o ./coverage.html -L && open ./coverage.html"
   },
   "peerDependencies": {
-    "hapi": ">=17.x",
-    "joi": ">=13.x"
+    "hapi": ">=18.x",
+    "joi": ">=14.x"
   },
   "dependencies": {
-    "bookshelf": "0.13.x",
-    "knex": "0.14.x",
-    "joi": "13.2.x"
+    "bookshelf": "0.14.x",
+    "knex": "0.16.x",
+    "joi": "14.3.x"
   },
   "devDependencies": {
     "coveralls": "3.0.x",
-    "hapi": "17.3.x",
+    "hapi": "18.1.x",
     "code": "5.2.x",
-    "lab": "15.4.x",
-    "pg": "7.4.x"
+    "lab": "18.0.x",
+    "pg": "7.9.x"
   }
 }
