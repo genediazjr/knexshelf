@@ -79,7 +79,7 @@ module.exports = [
             tableName: 'book',
             author: function () {
 
-                return this.belongsTo('author', 'author');
+                return this.belongsTo('author', 'author_id');
             }
         },
         references: {
@@ -109,11 +109,11 @@ module.exports = [
         columns: (table) => {
 
             table.string('title');
-            table.biginteger('author');
+            table.biginteger('author_id');
         },
         constraints: (table) => {
 
-            table.foreign('author').references('author.id');
+            table.foreign('author_id').references('author.id');
         }
     },
     {
