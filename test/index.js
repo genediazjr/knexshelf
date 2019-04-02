@@ -221,7 +221,7 @@ describe('lib', () => {
         expect(await soloTable.do.browse()).to.equal([]);
 
         const author = await authorModel.do.create({ name: 'tolkien' });
-        await bookModel.do.create({ author: author.id, title: 'the hobbit' });
+        await bookModel.do.create({ author_id: author.id, title: 'the hobbit' });
 
         res = await authorModel.do.browse();
 
@@ -233,7 +233,7 @@ describe('lib', () => {
 
         const qb = bookModel.model.query();
 
-        res = await qb.where({id: 1}).select();
+        res = await qb.where({ id: 1 }).select();
 
         expect(res[0].title).to.equal('the hobbit');
 
@@ -349,6 +349,11 @@ describe('lib', () => {
                 }
             }
         });
+
+        const shelf78 = await Lib.buildShelf(connString, [Schemas[7], Schemas[8]]);
+
+        expect(shelf78.models.recurseReferenceTableA).to.exist();
+        expect(shelf78.models.recurseReferenceTableB).to.exist();
 
         expect(shelf0.bookshelves.default.knex).to.exist();
         expect(shelf0.knexes.default.raw).to.exist();

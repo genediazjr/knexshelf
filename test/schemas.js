@@ -169,5 +169,98 @@ module.exports = [
 
             table.string('label').notNullable();
         }
+    },
+    {
+        name: 'nocolumnsTable',
+        protoProps: {
+            tableName: 'nocolumns_table',
+            hasTimestamps: true
+        }
+    },
+    {
+        name: 'recurseReferenceTableA',
+        protoProps: {
+            tableName: 'recurse_reference_table_A',
+            recurse_reference_table_B: function () {
+
+                return this.belongsTo('recurse_reference_table_B', 'recurse_reference_table_B_id');
+            }
+        },
+        references: {
+            browse: [
+                {
+                    recurse_reference_table_B: function (qb) {
+
+                        qb.column(
+                            'id',
+                            'name'
+                        );
+                    }
+                }
+            ],
+            obtain: [
+                {
+                    recurse_reference_table_B: function (qb) {
+
+                        qb.column(
+                            'id',
+                            'name'
+                        );
+                    }
+                }
+            ]
+        },
+        columns: (table) => {
+
+            table.string('name');
+            table.biginteger('recurse_reference_table_B_id');
+        },
+        constraints: (table) => {
+
+            table.foreign('recurse_reference_table_B_id').references('recurse_reference_table_B.id');
+        }
+    },
+    {
+        name: 'recurseReferenceTableB',
+        protoProps: {
+            tableName: 'recurse_reference_table_B',
+            recurse_reference_table_A: function () {
+
+                return this.belongsTo('recurse_reference_table_A', 'recurse_reference_table_A_id');
+            }
+        },
+        references: {
+            browse: [
+                {
+                    recurse_reference_table_A: function (qb) {
+
+                        qb.column(
+                            'id',
+                            'name'
+                        );
+                    }
+                }
+            ],
+            obtain: [
+                {
+                    recurse_reference_table_A: function (qb) {
+
+                        qb.column(
+                            'id',
+                            'name'
+                        );
+                    }
+                }
+            ]
+        },
+        columns: (table) => {
+
+            table.string('name');
+            table.biginteger('recurse_reference_table_A_id');
+        },
+        constraints: (table) => {
+
+            table.foreign('recurse_reference_table_A_id').references('recurse_reference_table_A.id');
+        }
     }
 ];
