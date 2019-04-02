@@ -21,7 +21,7 @@
     "test-cover": "lab -c -v -L -a code -r html -o ./coverage.html -L && open ./coverage.html"
   },
   "peerDependencies": {
-    "hapi": ">=18.x",
+    "hapi": ">=17.x",
     "joi": ">=14.x"
   },
   "dependencies": {
