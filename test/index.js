@@ -481,13 +481,15 @@ describe('lib', () => {
         const models = server.methods.models;
         const modelsx = serverx.methods.models;
 
-        await models.soloTable.create({ label: 'farboo' });
+        expect(models.soloTable.schema()).to.exist();
 
-        let res = await models.soloTable.obtain({ id: 1 });
+        await models.soloTable.do.create({ label: 'farboo' });
+
+        let res = await models.soloTable.do.obtain({ id: 1 });
 
         expect(res.label).to.equal('farboo');
 
-        res = await modelsx.soloTable.browse();
+        res = await modelsx.soloTable.do.browse();
 
         expect(res[0].label).to.equal('farboo');
 
@@ -495,7 +497,7 @@ describe('lib', () => {
             plugin: Lib.generateHapiPlugin('../package.json', Schemas)
         })).to.reject(Error, 'Missing connections');
 
-        await expect(models.soloTable.obtain({
+        await expect(models.soloTable.do.obtain({
             id: 2
         }, {
             require: true
@@ -508,6 +510,19 @@ describe('lib', () => {
         await server.knexes.default.schema.dropTableIfExists(Schemas[2].protoProps.tableName);
         await server.knexes.default.schema.dropTableIfExists(Schemas[1].protoProps.tableName);
         await server.knexes.default.schema.dropTableIfExists(Schemas[0].protoProps.tableName);
+
+        server.route({
+            method: 'get',
+            path: '/',
+            handler: async (request) => {
+
+                return request.server.methods.models.soloTable.schema().name;
+            }
+        });
+
+        res = await server.inject('/');
+
+        expect(res.result).to.equal('soloTable');
     });
 
     it('exports.generateShelf', async () => {
@@ -552,13 +567,13 @@ describe('lib', () => {
 
         const models = server.methods.models;
 
-        await models.soloTable.create({ label: 'farboo' });
+        await models.soloTable.do.create({ label: 'farboo' });
 
-        res = await models.soloTable.obtain({ id: 1 });
+        res = await models.soloTable.do.obtain({ id: 1 });
 
         expect(res.label).to.equal('farboo');
 
-        res = await models.soloTable.browse();
+        res = await models.soloTable.do.browse();
 
         expect(res[0].label).to.equal('farboo');
 
