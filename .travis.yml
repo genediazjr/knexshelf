@@ -11,6 +11,8 @@ services:
 
 env:
   - CC=clang CXX=clang++ npm_config_clang=1
+  global:
+    - PGPORT=5432
 
 addons:
   postgresql: "10"
