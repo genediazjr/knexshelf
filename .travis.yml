@@ -12,19 +12,13 @@ services:
 env:
   - CC=clang CXX=clang++ npm_config_clang=1
 
-env:
-  global:
-    - PGPORT=5432
-
 addons:
-  postgresql: "10"
+  postgresql: "9.6"
   apt:
     sources:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
-      - postgresql-10
-      - postgresql-client-10
 
 after_script: NODE_ENV=test lab -r lcov | ./node_modules/.bin/coveralls
 
