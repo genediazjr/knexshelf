@@ -134,23 +134,27 @@ describe('lib', () => {
         const Model4 = Object.assign({}, Schemas[3]);
         const Model5 = Object.assign({}, Schemas[4]);
         const Model6 = Object.assign({}, Schemas[5]);
+        const Model9 = Object.assign({}, Schemas[9]);
 
         await bookshelf.knex.schema.dropTableIfExists(Model4.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model3.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model1.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model5.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model6.protoProps.tableName);
+        await bookshelf.knex.schema.dropTableIfExists(Model9.protoProps.tableName);
 
         await Lib.createTable(Model3, bookshelf);
         await Lib.createTable(Model4, bookshelf);
         await Lib.createTable(Model1, bookshelf);
         await Lib.createTable(Model5, bookshelf);
         await Lib.createTable(Model6, bookshelf);
+        await Lib.createTable(Model9, bookshelf);
 
         const soloTable = Lib.loadModel(Model1, bookshelf);
         const bookModel = Lib.loadModel(Model4, bookshelf);
         const authorModel = Lib.loadModel(Model3, bookshelf);
         const updatedModel = Lib.loadModel(Model6, bookshelf);
+        const noIdTestModel = Lib.loadModel(Model9, bookshelf);
         const formatterModel = Lib.loadModel(Model5, bookshelf);
 
         await updatedModel.do.create({ label: 'updateme' });
@@ -203,6 +207,41 @@ describe('lib', () => {
         res = await soloTable.do.browse();
 
         expect(res[0].label).to.equal('test');
+
+        await noIdTestModel.do.create({ code: 'foobar', remarks: 'insert' });
+        await noIdTestModel.do.create({ code: 'foobar2', remarks: 'insert' });
+        await noIdTestModel.do.create({ code: 'foobar3', remarks: 'some' });
+
+        res = await noIdTestModel.do.browse();
+
+        expect(res[0].remarks).to.equal('insert');
+        expect(res[1].remarks).to.equal('insert');
+
+        await expect(noIdTestModel.do.update({ remarks: 'insert' }, { code: 'test' })).to.reject(Error, 'Update params found more than one row. Use multiple option');
+
+        await noIdTestModel.do.update({ remarks: 'insert' }, { remarks: 'test' }, { multiple: true });
+
+        res = await noIdTestModel.do.browse();
+
+        expect(res[0].remarks).to.equal('test');
+        expect(res[1].remarks).to.equal('test');
+
+        await noIdTestModel.do.update({ code: 'foobar' }, { remarks: 'single' });
+        await noIdTestModel.do.update({ code: 'foobar' }, { remarks: 'test' }, {});
+
+        res = await noIdTestModel.do.browse();
+
+        expect(res[0].remarks).to.equal('test');
+        expect(res[1].remarks).to.equal('test');
+
+        await expect(noIdTestModel.do.delete({ remarks: 'test' })).to.reject(Error, 'Delete params found more than one row. Use multiple option');
+
+        await noIdTestModel.do.delete({ remarks: 'test' }, { multiple: true });
+        await noIdTestModel.do.delete({ code: 'foobar3' }, {});
+
+        res = await noIdTestModel.do.browse();
+
+        expect(res).to.equal([]);
 
         await soloTable.do.update({ id: 1 }, { label: 'foobar' });
 
@@ -280,8 +319,7 @@ describe('lib', () => {
 
         expect(res[0].label).to.equal('fixed');
 
-        await expect(formatterModel.do.update()).to.reject(Error,
-            'A model cannot be updated without a "where" clause or an idAttribute.');
+        await expect(formatterModel.do.update()).to.reject(Error, 'No Rows Updated');
 
         await expect(formatterModel.do.delete({
             label: 'foobar'
@@ -304,7 +342,6 @@ describe('lib', () => {
 
         expect(delay).to.be.above(1000);
         expect(delay).to.be.below(2000);
-
 
         await bookshelf.knex.schema.dropTableIfExists(Model4.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model3.protoProps.tableName);

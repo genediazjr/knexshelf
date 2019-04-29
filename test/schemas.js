@@ -262,5 +262,17 @@ module.exports = [
 
             table.foreign('recurse_reference_table_A_id').references('recurse_reference_table_A.id');
         }
+    },
+    {
+        name: 'noIdTest',
+        protoProps: {
+            tableName: 'no_id_test',
+            withUpdatedAt: true
+        },
+        columns: (table) => {
+
+            table.string('code').unique();
+            table.string('remarks');
+        }
     }
 ];
