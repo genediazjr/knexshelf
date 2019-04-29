@@ -34,6 +34,7 @@
     "@hapi/code": "5.3.x",
     "@hapi/lab": "18.1.x",
     "coveralls": "3.0.x",
+    "redis": "2.8.x",
     "pg": "7.10.x"
   }
 }
