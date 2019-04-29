@@ -11,6 +11,8 @@ services:
 
 env:
   - CC=clang CXX=clang++ npm_config_clang=1
+
+env:
   global:
     - PGPORT=5432
 
