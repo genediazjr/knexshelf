@@ -1,22 +1,26 @@
 language: node_js
 node_js:
   - "8"
+  - "10"
 
 sudo: required
 
 services:
   - postgresql
+  - redis-server
 
 env:
   - CC=clang CXX=clang++ npm_config_clang=1
 
 addons:
-  postgresql: "9.5"
+  postgresql: "10"
   apt:
     sources:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
+      - postgresql-10
+      - postgresql-client-10
 
 after_script: NODE_ENV=test lab -r lcov | ./node_modules/.bin/coveralls
 
