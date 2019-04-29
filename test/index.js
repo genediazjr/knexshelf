@@ -40,7 +40,7 @@ describe('lib', () => {
         expect(() => {
 
             Lib.initBookshelf({});
-        }).to.throw(Error, 'unable to instantiate bookshelf, invalid parameter');
+        }).to.throw(Error, 'Unable to instantiate bookshelf, invalid parameter');
     });
 
     it('exports.initConns', () => {
@@ -56,7 +56,7 @@ describe('lib', () => {
         expect(() => {
 
             Lib.initConns(0);
-        }).to.throw(Error, 'unable to instantiate bookshelves, invalid connections');
+        }).to.throw(Error, 'Unable to instantiate bookshelves, invalid connections');
     });
 
     it('exports.createTable', async () => {
