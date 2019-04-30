@@ -13,6 +13,7 @@ const lab = exports.lab = Lab.script();
 const describe = lab.describe;
 const it = lab.it;
 
+const cacheString = 'redis://localhost:6379';
 const connString = 'postgres://postgres:postgres@localhost:5432/postgres';
 
 const timeout = (ms) => {
@@ -613,6 +614,63 @@ describe('lib', () => {
         res = await models.soloTable.do.browse();
 
         expect(res[0].label).to.equal('farboo');
+
+        const fouxCache = {};
+
+        Lib.internals.cache.get = async (key) => {
+
+            return fouxCache[key];
+        };
+
+        Lib.internals.cache.set = async (key, value) => {
+
+            fouxCache[key] = value;
+        };
+
+        Lib.internals.broadcast = async (channel, message) => {
+
+            expect(channel).to.equal('soloTable');
+            expect(message).to.equal('{"method":"create","payload":{"label":"farbooz","id":"2"}}');
+        };
+
+        const shelf0 = await Testlib.init(connString, {}, { caches: cacheString });
+
+        expect(shelf0.bookshelves.default.knex).to.exist();
+        expect(shelf0.knexes.default.raw).to.exist();
+        expect(shelf0.models.soloTable.do).to.exist();
+        expect(shelf0.models.compositeTable.do).to.exist();
+        expect(shelf0.models.author.do).to.exist();
+        expect(shelf0.models.book.do).to.exist();
+
+        const server0 = Hapi.server();
+
+        await server0.register({
+            plugin: Testlib,
+            options: {
+                conns: connString,
+                caches: cacheString
+            }
+        });
+
+        const models0 = server.methods.models;
+
+        await models0.soloTable.do.create({ label: 'farbooz' });
+
+        res = await models0.soloTable.do.obtain({ id: 2 });
+
+        expect(res.label).to.equal('farbooz');
+
+        res = await models0.soloTable.do.obtain({ id: 2 });
+
+        expect(res.label).to.equal('farbooz');
+
+        res = await models0.soloTable.do.browse();
+
+        expect(res[1].label).to.equal('farbooz');
+
+        res = await models0.soloTable.do.browse();
+
+        expect(res[1].label).to.equal('farbooz');
 
         await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[3].protoProps.tableName);
         await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[2].protoProps.tableName);
