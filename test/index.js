@@ -416,6 +416,14 @@ describe('lib', () => {
         expect(delay).to.be.above(1000);
         expect(delay).to.be.below(2000);
 
+        res = await soloTable.do.scrimp({ label: 'scrimp' });
+
+        res.label = 'newval';
+
+        res = await soloTable.do.scrimp(res);
+
+        expect(res.label).to.equal('newval');
+
         await bookshelf.knex.schema.dropTableIfExists(Model4.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model3.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model1.protoProps.tableName);
