@@ -264,7 +264,6 @@ module.exports = [
         }
     },
     {
-        name: 'noIdTest',
         protoProps: {
             tableName: 'no_id_test',
             withUpdatedAt: true
