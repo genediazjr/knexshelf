@@ -73,10 +73,6 @@
     "comma-spacing": 2,
     "arrow-parens": 2,
     "arrow-spacing": 2,
-    "arrow-body-style": [
-      2,
-      "always"
-    ],
     "prefer-const": 2,
     "prefer-template": 2,
     "prefer-arrow-callback": 1,
