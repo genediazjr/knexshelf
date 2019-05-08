@@ -173,7 +173,15 @@ describe('lib', () => {
         expect(await soloTable.do.browse({
             perPage: 2,
             page: 2
-        })).to.equal([]);
+        })).to.equal({
+            payload: [],
+            pagination: {
+                page: 2,
+                pageSize: 2,
+                rowCount: 0,
+                pageCount: 0
+            }
+        });
 
         expect(await soloTable.do.browse({
             perPage: 2,
@@ -182,7 +190,15 @@ describe('lib', () => {
 
                 query.orderByRaw('id DESC');
             }
-        })).to.equal([]);
+        })).to.equal({
+            payload: [],
+            pagination: {
+                page: 2,
+                pageSize: 2,
+                rowCount: 0,
+                pageCount: 0
+            }
+        });
 
         expect(await soloTable.do.browse({
             perPage: 2,
@@ -190,16 +206,40 @@ describe('lib', () => {
 
                 query.orderByRaw('id DESC');
             }
-        })).to.equal([]);
+        })).to.equal({
+            payload: [],
+            pagination: {
+                page: 0,
+                pageSize: 0,
+                rowCount: 0,
+                pageCount: 0
+            }
+        });
 
         expect(await soloTable.do.browse({
             custom: (query) => {
 
                 query.orderByRaw('id DESC');
             }
-        })).to.equal([]);
+        })).to.equal({
+            payload: [],
+            pagination: {
+                page: 0,
+                pageSize: 0,
+                rowCount: 0,
+                pageCount: 0
+            }
+        });
 
-        expect(await soloTable.do.browse()).to.equal([]);
+        expect(await soloTable.do.browse()).to.equal({
+            payload: [],
+            pagination: {
+                page: 0,
+                pageSize: 0,
+                rowCount: 0,
+                pageCount: 0
+            }
+        });
 
         expect(await soloTable.do.obtain()).to.equal(null);
 
@@ -207,7 +247,7 @@ describe('lib', () => {
 
         res = await soloTable.do.browse();
 
-        expect(res[0].label).to.equal('test');
+        expect(res.payload[0].label).to.equal('test');
 
         await noIdTestModel.do.create({ code: 'foobar', remarks: 'insert' });
         await noIdTestModel.do.create({ code: 'foobar2', remarks: 'insert' });
@@ -215,8 +255,8 @@ describe('lib', () => {
 
         res = await noIdTestModel.do.browse();
 
-        expect(res[0].remarks).to.equal('insert');
-        expect(res[1].remarks).to.equal('insert');
+        expect(res.payload[0].remarks).to.equal('insert');
+        expect(res.payload[1].remarks).to.equal('insert');
 
         await expect(noIdTestModel.do.update({ remarks: 'insert' }, { code: 'test' })).to.reject(Error, 'Update params found more than one row. Use multiple option');
 
@@ -224,16 +264,16 @@ describe('lib', () => {
 
         res = await noIdTestModel.do.browse();
 
-        expect(res[0].remarks).to.equal('test');
-        expect(res[1].remarks).to.equal('test');
+        expect(res.payload[0].remarks).to.equal('test');
+        expect(res.payload[1].remarks).to.equal('test');
 
         await noIdTestModel.do.update({ code: 'foobar' }, { remarks: 'single' });
         await noIdTestModel.do.update({ code: 'foobar' }, { remarks: 'test' }, {});
 
         res = await noIdTestModel.do.browse();
 
-        expect(res[0].remarks).to.equal('test');
-        expect(res[1].remarks).to.equal('test');
+        expect(res.payload[0].remarks).to.equal('test');
+        expect(res.payload[1].remarks).to.equal('test');
 
         await expect(noIdTestModel.do.delete({ remarks: 'test' })).to.reject(Error, 'Delete params found more than one row. Use multiple option');
 
@@ -242,13 +282,21 @@ describe('lib', () => {
 
         res = await noIdTestModel.do.browse();
 
-        expect(res).to.equal([]);
+        expect(res).to.equal({
+            payload: [],
+            pagination: {
+                page: 0,
+                pageSize: 0,
+                rowCount: 0,
+                pageCount: 0
+            }
+        });
 
         await soloTable.do.update({ id: 1 }, { label: 'foobar' });
 
         res = await soloTable.do.browse();
 
-        expect(res[0].label).to.equal('foobar');
+        expect(res.payload[0].label).to.equal('foobar');
 
         await expect(soloTable.do.delete()).to.reject(Error, 'No Rows Deleted');
 
@@ -258,18 +306,26 @@ describe('lib', () => {
 
         await soloTable.do.delete({ label: 'foobar' });
 
-        expect(await soloTable.do.browse()).to.equal([]);
+        expect(await soloTable.do.browse()).to.equal({
+            payload: [],
+            pagination: {
+                page: 0,
+                pageSize: 0,
+                rowCount: 0,
+                pageCount: 0
+            }
+        });
 
         const author = await authorModel.do.create({ name: 'tolkien' });
         await bookModel.do.create({ author_id: author.id, title: 'the hobbit' });
 
         res = await authorModel.do.browse();
 
-        expect(res[0].name).to.equal('tolkien');
+        expect(res.payload[0].name).to.equal('tolkien');
 
         res = await bookModel.do.browse({ page: 1, perPage: 10 });
 
-        expect(res[0].title).to.equal('the hobbit');
+        expect(res.payload[0].title).to.equal('the hobbit');
 
         const qb = bookModel.model.query();
 
@@ -286,7 +342,15 @@ describe('lib', () => {
         await bookModel.do.delete({ title: 'the hobbit' });
         await authorModel.do.delete({ id: 1 });
 
-        expect(await bookModel.do.browse()).to.equal([]);
+        expect(await bookModel.do.browse()).to.equal({
+            payload: [],
+            pagination: {
+                page: 0,
+                pageSize: 0,
+                rowCount: 0,
+                pageCount: 0
+            }
+        });
 
         await formatterModel.do.create();
 
@@ -296,21 +360,29 @@ describe('lib', () => {
             }
         });
 
-        expect(res[0].label).to.equal('fixed');
+        expect(res.payload[0].label).to.equal('fixed');
 
-        expect(await formatterModel.do.browse()).to.equal([]);
+        expect(await formatterModel.do.browse()).to.equal({
+            payload: [],
+            pagination: {
+                page: 2,
+                pageSize: 1,
+                rowCount: 1,
+                pageCount: 1
+            }
+        });
 
         await formatterModel.do.create();
 
         res = await formatterModel.do.browse();
 
-        expect(res[0].label).to.equal('fixed');
+        expect(res.payload[0].label).to.equal('fixed');
 
         await formatterModel.do.update({ id: 2 }, { label: 'foobar' });
 
         res = await formatterModel.do.browse();
 
-        expect(res[0].label).to.equal('updated');
+        expect(res.payload[0].label).to.equal('updated');
 
         res = await formatterModel.do.browse({}, {
             formatter: async (query, schema) => {
@@ -318,7 +390,7 @@ describe('lib', () => {
             }
         });
 
-        expect(res[0].label).to.equal('fixed');
+        expect(res.payload[0].label).to.equal('fixed');
 
         await expect(formatterModel.do.update()).to.reject(Error, 'No Rows Updated');
 
@@ -339,7 +411,7 @@ describe('lib', () => {
 
         res = await updatedModel.do.browse();
 
-        const delay = res[0].updated_at.getTime() - res[0].created_at.getTime();
+        const delay = res.payload[0].updated_at.getTime() - res.payload[0].created_at.getTime();
 
         expect(delay).to.be.above(1000);
         expect(delay).to.be.below(2000);
@@ -405,7 +477,15 @@ describe('lib', () => {
         expect(shelf.models.author.do).to.exist();
         expect(shelf.models.book.do).to.exist();
 
-        expect(await shelf.models.book.do.browse()).to.equal([]);
+        expect(await shelf.models.book.do.browse()).to.equal({
+            payload: [],
+            pagination: {
+                page: 0,
+                pageSize: 0,
+                rowCount: 0,
+                pageCount: 0
+            }
+        });
 
         expect(shelf2.bookshelves.foobar.knex).to.exist();
         expect(shelf2.knexes.foobar.raw).to.exist();
@@ -414,7 +494,15 @@ describe('lib', () => {
         expect(shelf2.models.author.do).to.exist();
         expect(shelf2.models.book.do).to.exist();
 
-        expect(await shelf2.models.book.do.browse()).to.equal([]);
+        expect(await shelf2.models.book.do.browse()).to.equal({
+            payload: [],
+            pagination: {
+                page: 0,
+                pageSize: 0,
+                rowCount: 0,
+                pageCount: 0
+            }
+        });
 
         expect(shelf3.bookshelves.foobar.knex).to.exist();
         expect(shelf3.knexes.foobar.raw).to.exist();
@@ -429,7 +517,15 @@ describe('lib', () => {
         expect(shelf3.models.author.do).to.exist();
         expect(shelf3.models.book.do).to.exist();
 
-        expect(await shelf3.models.book2.do.browse()).to.equal([]);
+        expect(await shelf3.models.book2.do.browse()).to.equal({
+            payload: [],
+            pagination: {
+                page: 0,
+                pageSize: 0,
+                rowCount: 0,
+                pageCount: 0
+            }
+        });
 
         const res4 = await shelf4.models.formatterTable.do.create({ somecolumn: 'test' });
 
@@ -529,7 +625,7 @@ describe('lib', () => {
 
         res = await modelsx.soloTable.do.browse();
 
-        expect(res[0].label).to.equal('farboo');
+        expect(res.payload[0].label).to.equal('farboo');
 
         await expect(serverv.register({
             plugin: Lib.generateHapiPlugin('../package.json', Schemas)
@@ -576,7 +672,15 @@ describe('lib', () => {
 
         let res;
 
-        expect(await shelf.models.book.do.browse()).to.equal([]);
+        expect(await shelf.models.book.do.browse()).to.equal({
+            payload: [],
+            pagination: {
+                page: 0,
+                pageSize: 0,
+                rowCount: 0,
+                pageCount: 0
+            }
+        });
 
         const server = Hapi.server();
 
@@ -613,7 +717,7 @@ describe('lib', () => {
 
         res = await models.soloTable.do.browse();
 
-        expect(res[0].label).to.equal('farboo');
+        expect(res.payload[0].label).to.equal('farboo');
 
         const fouxCache = {};
 
@@ -666,11 +770,11 @@ describe('lib', () => {
 
         res = await models0.soloTable.do.browse();
 
-        expect(res[1].label).to.equal('farbooz');
+        expect(res.payload[1].label).to.equal('farbooz');
 
         res = await models0.soloTable.do.browse();
 
-        expect(res[1].label).to.equal('farbooz');
+        expect(res.payload[1].label).to.equal('farbooz');
 
         await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[3].protoProps.tableName);
         await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[2].protoProps.tableName);
