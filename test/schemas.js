@@ -272,6 +272,12 @@ module.exports = [
 
             table.string('code').unique();
             table.string('remarks');
+        },
+        formatters: {
+            scrimp: async (payload, schema) => {
+
+                return { payload, schema };
+            }
         }
     }
 ];

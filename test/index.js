@@ -424,6 +424,9 @@ describe('lib', () => {
 
         expect(res.label).to.equal('newval');
 
+        await expect(soloTable.do.scrimp()).to.reject(Error,
+            'insert into "solo_table" default values returning "id" - null value in column "label" violates not-null constraint');
+
         await bookshelf.knex.schema.dropTableIfExists(Model4.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model3.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model1.protoProps.tableName);
