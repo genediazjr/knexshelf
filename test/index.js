@@ -486,6 +486,8 @@ describe('lib', () => {
         expect(shelf.models.soloTable.do).to.exist();
         expect(shelf.models.compositeTable.do).to.exist();
         expect(shelf.models.author.do).to.exist();
+        expect(shelf.models.author.do.testing).to.exist();
+        expect(await shelf.models.author.do.hasModel()).to.equal(true);
         expect(shelf.models.book.do).to.exist();
 
         expect(await shelf.models.book.do.browse()).to.equal({

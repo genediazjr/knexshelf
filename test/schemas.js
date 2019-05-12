@@ -69,6 +69,15 @@ module.exports = [
                 testing: function () {
 
                     return schema.name;
+                },
+                hasModel: function () {
+
+                    if (schema.model.forge) {
+
+                        return true;
+                    }
+
+                    return false;
                 }
             };
         }
