@@ -789,6 +789,21 @@ describe('lib', () => {
 
         expect(res.payload[1].label).to.equal('farbooz');
 
+        Lib.internals.broadcast = Function.prototype;
+
+        Lib.internals.formatters.create = async (payload, schema) => {
+
+            payload.label = 'newlabel';
+
+            return { payload, schema };
+        };
+
+        await models0.soloTable.do.create({ label: 'fardoo' });
+
+        res = await models.soloTable.do.obtain({ label: 'newlabel' });
+
+        expect(res.label).to.equal('newlabel');
+
         await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[3].protoProps.tableName);
         await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[2].protoProps.tableName);
         await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[1].protoProps.tableName);
