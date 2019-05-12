@@ -674,6 +674,11 @@ describe('lib', () => {
 
     it('exports.generateShelf', async () => {
 
+        Lib.internals.columns = (table) => {
+
+            table.boolean('is_deleted').notNullable().defaultTo(false);
+        };
+
         const shelf = await Testlib.init(connString);
 
         expect(shelf.bookshelves.default.knex).to.exist();
@@ -727,6 +732,7 @@ describe('lib', () => {
         res = await models.soloTable.do.obtain({ id: 1 });
 
         expect(res.label).to.equal('farboo');
+        expect(res.is_deleted).to.equal(false);
 
         res = await models.soloTable.do.browse();
 
