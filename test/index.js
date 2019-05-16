@@ -29,7 +29,7 @@ describe('lib', () => {
     it('exports.initBookshelf', () => {
 
         const bsString = Lib.initBookshelf(connString);
-        const bsPlugin = Lib.initBookshelf(connString, ['registry', 'pagination', 'visibility']);
+        const bsPlugin = Lib.initBookshelf(connString, ['registry', 'pagination', 'visibility', 'virtuals']);
         const bsKnex = Lib.initBookshelf(require('knex')(connString));
         const bsBookshelf = Lib.initBookshelf(require('bookshelf')(require('knex')(connString)));
 
