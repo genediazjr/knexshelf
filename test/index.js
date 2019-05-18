@@ -544,12 +544,32 @@ describe('lib', () => {
 
         expect(res4.somecolumn).to.equal('test');
 
+        Lib.internals.preBuild = async (shelf, schemas) => {
+
+            schemas.default[3].name = 'fook';
+        };
+
+        Lib.internals.postBuild = async (shelf) => {
+
+            await shelf.models.fook.do.create({ title: 'foobook' });
+        };
+
+        const shelfx = await Lib.buildShelf(connString, Schemas, { methods: [Methods] });
+        const res = await shelfx.models.fook.do.browse();
+
+        expect(res.payload[0].title).to.equal('foobook');
+
+        Schemas[3].name = 'book';
+
         await shelf.bookshelves.default.knex.schema.dropTableIfExists(Modelx.protoProps.tableName);
         await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[4].protoProps.tableName);
         await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[3].protoProps.tableName);
         await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[2].protoProps.tableName);
         await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[1].protoProps.tableName);
         await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[0].protoProps.tableName);
+
+        Lib.internals.postBuild = Function.prototype;
+        Lib.internals.preBuild = Function.prototype;
 
         await expect(Lib.buildShelf({
             foobar: connString
