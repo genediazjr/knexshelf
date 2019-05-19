@@ -708,6 +708,8 @@ describe('lib', () => {
         expect(shelf.models.author.do).to.exist();
         expect(shelf.models.book.do).to.exist();
 
+        expect(Object.keys(shelf.models.soloTable.columnInfo)).to.equal(['id', 'created_at', 'label', 'is_deleted']);
+
         let res;
 
         expect(await shelf.models.book.do.browse()).to.equal({
@@ -746,6 +748,8 @@ describe('lib', () => {
         });
 
         const models = server.methods.models;
+
+        expect(Object.keys(server.methods.models.soloTable.columnInfo())).to.equal(['id', 'created_at', 'label', 'is_deleted']);
 
         await models.soloTable.do.create({ label: 'farboo' });
 
