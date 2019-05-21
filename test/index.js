@@ -842,6 +842,29 @@ describe('lib', () => {
 
         expect(res.label).to.equal('newlabel');
 
+        Lib.internals.preRegister = async (server) => {
+
+            server.route({ path: '/pre', method: 'get', handler: () => 'pre' });
+        };
+
+        Lib.internals.postRegister = async (server) => {
+
+            server.route({ path: '/post', method: 'get', handler: () => 'post' });
+        };
+
+        const zerver = Hapi.server();
+
+        await zerver.register({
+            plugin: Testlib,
+            options: { conns: connString }
+        });
+
+        const preRes = await zerver.inject({ url: '/pre' });
+        const postRes = await zerver.inject({ url: '/post' });
+
+        expect(preRes.result).to.equal('pre');
+        expect(postRes.result).to.equal('post');
+
         await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[3].protoProps.tableName);
         await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[2].protoProps.tableName);
         await shelf.bookshelves.default.knex.schema.dropTableIfExists(Schemas[1].protoProps.tableName);
