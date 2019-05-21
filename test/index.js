@@ -5,6 +5,7 @@ const Code = require('@hapi/code');
 const Lab = require('@hapi/lab');
 const Lib = require('..');
 const Methods = require('./methods');
+const Methodz = require('./methodz');
 const Schemas = require('./schemas');
 const Testlib = require('./testlib');
 
@@ -576,6 +577,13 @@ describe('lib', () => {
         }, {
             foobarx: Schemas
         })).to.reject(Error, 'No bookshelf defined for: foobarx');
+
+        await expect(Lib.buildShelf(
+            connString,
+            Schemas, {
+                methods: [Methods, Methodz]
+            })
+        ).to.reject(Error, 'Duplicate method name testing.');
     });
 
     it('exports.generateHapiPlugin', async () => {
