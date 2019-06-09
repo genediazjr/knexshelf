@@ -785,7 +785,7 @@ describe('lib', () => {
         Lib.internals.broadcast = async (channel, message) => {
 
             expect(channel).to.equal('soloTable');
-            expect(message).to.equal('{"method":"create","payload":{"label":"farbooz","id":"2"}}');
+            expect(message).to.equal({ method: 'create', payload: { label: 'farbooz', id: '2' } });
         };
 
         const shelf0 = await Testlib.init(connString, {}, { caches: cacheString });
