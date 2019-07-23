@@ -26,15 +26,15 @@
   },
   "dependencies": {
     "@hapi/joi": "15.0.x",
-    "bookshelf": "0.14.x",
-    "knex": "0.16.x"
+    "bookshelf": "0.15.x",
+    "knex": "0.19.x"
   },
   "devDependencies": {
     "@hapi/hapi": "18.3.x",
     "@hapi/code": "5.3.x",
-    "@hapi/lab": "18.1.x",
+    "@hapi/lab": "19.1.x",
     "coveralls": "3.0.x",
     "redis": "2.8.x",
-    "pg": "7.10.x"
+    "pg": "7.11.x"
   }
 }
