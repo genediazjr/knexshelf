@@ -35,6 +35,7 @@
     "@hapi/lab": "21.0.x",
     "coveralls": "3.0.x",
     "redis": "2.8.x",
-    "pg": "7.12.x"
+    "pg": "7.12.x",
+    "bookshelf-processor-plugin": "1.0.x"
   }
 }
