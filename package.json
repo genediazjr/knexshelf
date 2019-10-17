@@ -22,19 +22,19 @@
   },
   "peerDependencies": {
     "@hapi/hapi": ">=18.x",
-    "@hapi/joi": ">=15.x"
+    "@hapi/joi": ">=16.x"
   },
   "dependencies": {
-    "@hapi/joi": "15.0.x",
-    "bookshelf": "0.15.x",
+    "@hapi/joi": "16.0.x",
+    "bookshelf": "1.0.x",
     "knex": "0.19.x"
   },
   "devDependencies": {
-    "@hapi/hapi": "18.3.x",
-    "@hapi/code": "5.3.x",
-    "@hapi/lab": "19.1.x",
+    "@hapi/hapi": "18.4.x",
+    "@hapi/code": "7.0.x",
+    "@hapi/lab": "21.0.x",
     "coveralls": "3.0.x",
     "redis": "2.8.x",
-    "pg": "7.11.x"
+    "pg": "7.12.x"
   }
 }
