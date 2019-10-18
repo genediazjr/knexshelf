@@ -288,5 +288,17 @@ module.exports = [
                 return { payload, schema };
             }
         }
+    },
+    {
+        protoProps: {
+            tableName: 'cache_test'
+        },
+        columns: (table) => {
+
+            table.string('label').notNullable();
+        },
+        fixer: () => {
+
+        }
     }
 ];

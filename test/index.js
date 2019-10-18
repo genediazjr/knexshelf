@@ -379,6 +379,14 @@ describe('lib', () => {
 
         expect(res.payload[0].label).to.equal('fixed');
 
+        res = await formatterModel.do.browse({}, { fixer: async () => null });
+
+        expect(res.payload).to.equal([]);
+
+        res = await formatterModel.do.browse({ all: true });
+
+        expect(res.payload[0].label).to.equal('fixed');
+
         await formatterModel.do.update({ id: 2 }, { label: 'foobar' });
 
         res = await formatterModel.do.browse();
@@ -559,6 +567,11 @@ describe('lib', () => {
         const res = await shelfx.models.fook.do.browse();
 
         expect(res.payload[0].title).to.equal('foobook');
+
+        await shelf3.models.compositeTable.do.create({ text: 'foo', id1: 1, id2: 1 });
+        await shelf3.models.compositeTable.do.create({ text: 'foo', id1: 1, id2: 2 });
+
+        await expect(shelf3.models.compositeTable.do.obtain({ text: 'foo' })).to.reject(Error, 'Obtain params found more than one row. Use browse instead');
 
         Schemas[3].name = 'book';
 
@@ -840,7 +853,7 @@ describe('lib', () => {
 
         await models0.soloTable.do.create({ label: 'fardoo' });
 
-        res = await models.soloTable.do.obtain({ label: 'newlabel' });
+        res = await models.soloTable.do.obtain({ label: 'newlabel' }, { fixer: async (payload) => payload });
 
         expect(res.label).to.equal('newlabel');
 
@@ -853,6 +866,49 @@ describe('lib', () => {
 
             server.route({ path: '/post', method: 'get', handler: () => 'post' });
         };
+
+        const cache = {
+            get: async (key) => {
+
+                return fouxCache[key];
+            },
+            set: async (key, value) => {
+
+                fouxCache[key] = value;
+            },
+            del: async (key) => {
+
+                delete fouxCache[key];
+            }
+        };
+
+        Lib.internals.models.soloTable.cache = cache;
+
+        res = await models.soloTable.do.obtain({ label: 'newlabel' });
+
+        expect(res.label).to.equal('newlabel');
+
+        res = await models0.soloTable.do.browse();
+
+        expect(res.payload[1].label).to.equal('farbooz');
+
+        res = await models.soloTable.do.obtain({ label: 'newlabel' }, { cache });
+
+        expect(res.label).to.equal('newlabel');
+
+        res = await models0.soloTable.do.browse({}, { cache });
+
+        expect(res.payload[1].label).to.equal('farbooz');
+
+        await models0.soloTable.do.update({ id: 1 }, { is_deleted: true });
+
+        await models0.soloTable.do.update({ id: 1 }, { is_deleted: true }, { cache });
+
+        await models0.soloTable.do.delete({ label: 'farboo' });
+
+        await models0.soloTable.do.delete({ label: 'farbooz' }, { cache });
+
+        await expect(models0.cacheTest.do.delete({ label: 'farboo' })).to.reject(Error, 'No Rows Deleted');
 
         const zerver = Hapi.server();
 
