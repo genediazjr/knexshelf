@@ -137,6 +137,10 @@ describe('lib', () => {
         const Model5 = Object.assign({}, Schemas[4]);
         const Model6 = Object.assign({}, Schemas[5]);
         const Model9 = Object.assign({}, Schemas[9]);
+        const Model11 = Object.assign({}, Schemas[11]);
+        const Model12 = Object.assign({}, Schemas[12]);
+        const Model13 = Object.assign({}, Schemas[13]);
+        const Model14 = Object.assign({}, Schemas[14]);
 
         await bookshelf.knex.schema.dropTableIfExists(Model4.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model3.protoProps.tableName);
@@ -144,6 +148,10 @@ describe('lib', () => {
         await bookshelf.knex.schema.dropTableIfExists(Model5.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model6.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model9.protoProps.tableName);
+        await bookshelf.knex.schema.dropTableIfExists(Model11.protoProps.tableName);
+        await bookshelf.knex.schema.dropTableIfExists(Model12.protoProps.tableName);
+        await bookshelf.knex.schema.dropTableIfExists(Model13.protoProps.tableName);
+        await bookshelf.knex.schema.dropTableIfExists(Model14.protoProps.tableName);
 
         await Lib.createTable(Model3, bookshelf);
         await Lib.createTable(Model4, bookshelf);
@@ -151,6 +159,10 @@ describe('lib', () => {
         await Lib.createTable(Model5, bookshelf);
         await Lib.createTable(Model6, bookshelf);
         await Lib.createTable(Model9, bookshelf);
+        await Lib.createTable(Model11, bookshelf);
+        await Lib.createTable(Model12, bookshelf);
+        await Lib.createTable(Model13, bookshelf);
+        await Lib.createTable(Model14, bookshelf);
 
         const soloTable = Lib.loadModel(Model1, bookshelf);
         const bookModel = Lib.loadModel(Model4, bookshelf);
@@ -158,6 +170,10 @@ describe('lib', () => {
         const updatedModel = Lib.loadModel(Model6, bookshelf);
         const noIdTestModel = Lib.loadModel(Model9, bookshelf);
         const formatterModel = Lib.loadModel(Model5, bookshelf);
+        const withJSONBModel = Lib.loadModel(Model11, bookshelf);
+        const withJSONModel = Lib.loadModel(Model12, bookshelf);
+        const useJSONBModel = Lib.loadModel(Model13, bookshelf);
+        const useJSONModel = Lib.loadModel(Model14, bookshelf);
 
         await updatedModel.do.create({ label: 'updateme' });
 
@@ -241,6 +257,47 @@ describe('lib', () => {
                 pageCount: 0
             }
         });
+
+        expect(await withJSONBModel.do.obtain()).to.equal(null);
+        expect(await withJSONModel.do.obtain()).to.equal(null);
+
+        await withJSONBModel.do.create({ label: 'foobar', meta: { a: 'a' } });
+        await withJSONModel.do.create({ label: 'foobar', meta: { b: 'b' } });
+
+        res = await withJSONBModel.do.obtain({ id: 1 });
+
+        expect(res.label).to.equal('foobar');
+        expect(res.meta.a).to.equal('a');
+
+        res = await withJSONModel.do.obtain({ id: 1 });
+
+        expect(res.label).to.equal('foobar');
+        expect(res.meta.b).to.equal('b');
+
+        await withJSONBModel.do.create({ label: 'barfoo', meta: { c: 'c' } });
+        await withJSONModel.do.create({ label: 'barfoo', meta: { d: 'd' } });
+
+        res = await withJSONBModel.do.obtain({ label: 'barfoo' });
+
+        expect(res.id).to.equal('2');
+        expect(res.meta.c).to.equal('c');
+
+        res = await withJSONModel.do.obtain({ label: 'barfoo' });
+
+        expect(res.id).to.equal('2');
+        expect(res.meta.d).to.equal('d');
+
+        expect(await useJSONBModel.do.obtain()).to.equal(null);
+        expect(await useJSONModel.do.obtain()).to.equal(null);
+
+        await useJSONBModel.do.create({ label: 'usebar', with_jsonb_id: 1 });
+        await useJSONModel.do.create({ label: 'usebar', with_json_id: 1 });
+
+        res = await useJSONBModel.do.obtain({ id: 1 });
+
+        expect(res.with_jsonb.meta.a).to.equal('a');
+
+        await expect(useJSONModel.do.obtain({ id: 1 })).to.reject(Error, 'select distinct "with_json".* from "with_json" where "with_json"."id" in ($1) - could not identify an equality operator for type json');
 
         expect(await soloTable.do.obtain()).to.equal(null);
 
@@ -441,6 +498,10 @@ describe('lib', () => {
         await bookshelf.knex.schema.dropTableIfExists(Model1.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model5.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model6.protoProps.tableName);
+        await bookshelf.knex.schema.dropTableIfExists(Model11.protoProps.tableName);
+        await bookshelf.knex.schema.dropTableIfExists(Model12.protoProps.tableName);
+        await bookshelf.knex.schema.dropTableIfExists(Model13.protoProps.tableName);
+        await bookshelf.knex.schema.dropTableIfExists(Model14.protoProps.tableName);
 
         expect(() => {
 

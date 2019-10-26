@@ -300,5 +300,53 @@ module.exports = [
         fixer: () => {
 
         }
+    },
+    {
+        protoProps: {
+            tableName: 'with_jsonb'
+        },
+        columns: (table) => {
+
+            table.string('label');
+            table.jsonb('meta');
+        }
+    },
+    {
+        protoProps: {
+            tableName: 'with_json'
+        },
+        columns: (table) => {
+
+            table.string('label');
+            table.json('meta');
+        }
+    },
+    {
+        protoProps: {
+            tableName: 'use_jsonb',
+            with_jsonb: function () {
+
+                return this.belongsTo('with_jsonb', 'with_jsonb_id');
+            }
+        },
+        columns: (table) => {
+
+            table.string('label');
+            table.bigInteger('with_jsonb_id');
+        }
+    },
+    {
+        protoProps: {
+            tableName: 'use_json',
+            with_json: function () {
+
+                return this.belongsTo('with_json', 'with_json_id');
+            }
+        },
+        columns: (table) => {
+
+            table.string('label');
+            table.bigInteger('with_json_id');
+        }
     }
 ];
