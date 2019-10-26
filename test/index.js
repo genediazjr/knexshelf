@@ -30,7 +30,7 @@ describe('lib', () => {
     it('exports.initBookshelf', () => {
 
         const bsString = Lib.initBookshelf(connString);
-        const bsPlugin = Lib.initBookshelf(connString, ['registry', 'pagination', 'visibility', 'virtuals', 'bookshelf-processor-plugin']);
+        const bsPlugin = Lib.initBookshelf(connString, ['bookshelf-processor-plugin']);
         const bsKnex = Lib.initBookshelf(require('knex')(connString));
         const bsBookshelf = Lib.initBookshelf(require('bookshelf')(require('knex')(connString)));
 
@@ -412,7 +412,7 @@ describe('lib', () => {
         })).to.reject(Error, 'No Rows Deleted');
 
         await expect(soloTable.do.create()).to.reject(Error,
-            'insert into "solo_table" default values returning "id" - null value in column "label" violates not-null constraint');
+            'insert into "solo_table" default values returning * - null value in column "label" violates not-null constraint');
 
         await timeout(1000);
 
@@ -434,7 +434,7 @@ describe('lib', () => {
         expect(res.label).to.equal('newval');
 
         await expect(soloTable.do.scrimp()).to.reject(Error,
-            'insert into "solo_table" default values returning "id" - null value in column "label" violates not-null constraint');
+            'insert into "solo_table" default values returning * - null value in column "label" violates not-null constraint');
 
         await bookshelf.knex.schema.dropTableIfExists(Model4.protoProps.tableName);
         await bookshelf.knex.schema.dropTableIfExists(Model3.protoProps.tableName);
