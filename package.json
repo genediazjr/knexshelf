@@ -25,9 +25,9 @@
     "@hapi/joi": ">=16.x"
   },
   "dependencies": {
-    "@hapi/joi": "16.0.x",
+    "@hapi/joi": "16.1.x",
     "bookshelf": "1.0.x",
-    "knex": "0.19.x"
+    "knex": "0.20.x"
   },
   "devDependencies": {
     "@hapi/hapi": "18.4.x",
